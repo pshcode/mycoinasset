@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.github.pshcode.mycoinasset.mapper.MyCoinMapper">
+
+	<select id="selectMyCoins" resultType="myCoin">
+		select symbol
+		 	 , name
+		 	 , amount
+		 	 , date_format(create_date, '%Y-%m-%d %H:%i:%s') AS createDate
+		  from my_coin
+		 where use_yn = 'Y'
+	</select>
+
+	<insert id="insertMyCoin" parameterType="myCoin">
+		insert into my_coin (symbol, name, amount, create_date, use_yn)
+		values (#{symbol}, #{name}, #{amount}, now(), 'Y')
+	</insert>
+
+	<update id="updateAmount" parameterType="myCoin">
+		update my_coin
+		   set amount = #{amount}
+		 where symbol = #{symbol}
+	</update>
+
+	<delete id="deletMyCoin" parameterType="string">
+		update my_coin
+		   set use_yn = 'N'
+		 where symbol = #{symbol}
+	</delete>
+
+</mapper>
