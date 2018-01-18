@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pshcode.mycoinasset.config.MyCoinAssetApplication;
-import com.github.pshcode.mycoinasset.model.Ticker;
+import com.github.pshcode.mycoinasset.model.CoinInfo;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MyCoinAssetApplication.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -29,7 +29,7 @@ public class HomeControllerTests {
 		URI uri = URI.create(baseUrl);
 		String result = restTemplate.getForObject(uri, String.class);
 
-		Ticker[] tickers = objectMapper.readValue(result, Ticker[].class);
+		CoinInfo[] tickers = objectMapper.readValue(result, CoinInfo[].class);
 
 		System.out.println(tickers);
 	}

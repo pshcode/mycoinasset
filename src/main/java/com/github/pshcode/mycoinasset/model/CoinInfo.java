@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Ticker {
+public class CoinInfo implements Comparable {
 	@JsonProperty("id")
 	private String id;
 	@JsonProperty("name")
@@ -22,4 +22,11 @@ public class Ticker {
 	private String priceKrw;
 	@JsonProperty("percent_change_24h")
 	private String percentChange24h;
+
+	@Override
+	public int compareTo(Object obj) {
+		CoinInfo coinInfo = (CoinInfo)obj;
+
+		return coinInfo.getId().compareTo(getId());
+	}
 }

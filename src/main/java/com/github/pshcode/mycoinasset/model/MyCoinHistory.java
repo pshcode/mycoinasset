@@ -8,14 +8,13 @@ import lombok.Setter;
 /**
  * @author SungHoon, Park
  */
-@Alias("myCoin")
+@Alias("myCoinHistory")
 @Getter
 @Setter
-public class MyCoin {
-	private String id;
-	private String symbol;
-	private String amount;
-	private String useYn;
-	private String remark;
+public class MyCoinHistory {
 	private String createDate;
+	private String id;
+	private String amount;
+	private String price;
+	private String sumPrice;
 }

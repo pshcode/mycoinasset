@@ -49,22 +49,23 @@ public class MyCoinControllerTests {
 	@Test
 	public void add() throws Exception {
 		mockMvc.perform(post("/mycoin/add")
+			.param("id", "tron")
 			.param("symbol", "TRX")
-			.param("name", "tron")
+			.param("name", "Tron")
 			.param("amount", "45000.214501")
 		).andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
 	public void modifyAmount() throws Exception {
-		mockMvc.perform(post("/mycoin/modify/trx")
+		mockMvc.perform(post("/mycoin/modify/tron")
 			.param("amount", "111.214501")
 		).andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
 	public void deleteMyCoin() throws Exception {
-		mockMvc.perform(delete("/mycoin/delete/trx"))
+		mockMvc.perform(delete("/mycoin/delete/tron"))
 			.andExpect(status().is2xxSuccessful());
 	}
 }

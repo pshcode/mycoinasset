@@ -32,15 +32,11 @@ public class MyCoinService {
 		myCoinMapper.insertMyCoin(myCoin);
 	}
 
-	public int modifyAmount(String symbol, String amount) {
-		MyCoin myCoin = new MyCoin();
-		myCoin.setSymbol(StringUtils.upperCase(symbol));
-		myCoin.setAmount(amount);
-
-		return myCoinMapper.updateAmount(myCoin);
+	public int modifyMyCoin(MyCoin myCoin) {
+		return myCoinMapper.updateMyCoin(myCoin);
 	}
 
-	public int deleteMyCoin(String symbol) {
-		return myCoinMapper.deletMyCoin(symbol);
+	public int deleteMyCoin(String id) {
+		return myCoinMapper.deletMyCoin(id);
 	}
 }

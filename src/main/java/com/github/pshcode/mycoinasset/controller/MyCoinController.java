@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pshcode.mycoinasset.model.MyCoin;
-import com.github.pshcode.mycoinasset.service.CoinMarketCapApiService;
+import com.github.pshcode.mycoinasset.service.DailyMyCoinRecordService;
 import com.github.pshcode.mycoinasset.service.MyCoinService;
 
 /**
@@ -27,12 +26,11 @@ public class MyCoinController {
 	private MyCoinService myAssetService;
 
 	@Autowired
-	private CoinMarketCapApiService coinMarketCapApiService;
+	private DailyMyCoinRecordService myCoinRecordService;
 
 	@GetMapping
 	public String main(Model model) throws IOException {
 		model.addAttribute("myCoins", myAssetService.getMyCoins());
-		model.addAttribute("tickers", coinMarketCapApiService.getTickers());
 
 		return "mycoin/main";
 	}
@@ -43,15 +41,15 @@ public class MyCoinController {
 		myAssetService.addMyCoin(myCoin);
 	}
 
-	@PostMapping("/modify/{symbol}")
+	@PostMapping("/modify")
 	@ResponseBody
-	public void modifyAmount(@PathVariable("symbol") String symbol, @RequestParam("amount") String amount) {
-		myAssetService.modifyAmount(symbol, amount);
+	public void modify(MyCoin myCoin) {
+		myAssetService.modifyMyCoin(myCoin);
 	}
 
-	@DeleteMapping("/delete/{symbol}")
+	@DeleteMapping("/delete/{id}")
 	@ResponseBody
-	public void delete(@PathVariable("symbol") String symbol) {
-		myAssetService.deleteMyCoin(symbol);
+	public void delete(@PathVariable("id") String id) {
+		myAssetService.deleteMyCoin(id);
 	}
 }

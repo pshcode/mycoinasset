@@ -5,19 +5,15 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-import com.github.pshcode.mycoinasset.model.MyCoin;
+import com.github.pshcode.mycoinasset.model.MyCoinHistory;
 
 /**
  * @author SungHoon, Park
  */
 @Repository
 @Mapper
-public interface MyCoinMapper {
-	List<MyCoin> selectMyCoins();
+public interface MyCoinHistoryMapper {
+	List<MyCoinHistory> selectMyCoinHistories(String createDate);
 
-	void insertMyCoin(MyCoin myCoin);
-
-	int updateMyCoin(MyCoin myCoin);
-
-	int deletMyCoin(String symbol);
+	void insertMyCoinHistory(MyCoinHistory myCoinHistory);
 }
