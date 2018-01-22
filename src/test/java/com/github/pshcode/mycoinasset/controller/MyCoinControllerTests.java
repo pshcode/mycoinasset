@@ -68,4 +68,9 @@ public class MyCoinControllerTests {
 		mockMvc.perform(delete("/mycoin/delete/tron"))
 			.andExpect(status().is2xxSuccessful());
 	}
+
+	@Test
+	public void test() throws Exception {
+		mockMvc.perform(get("/mycoin/test"));
+	}
 }

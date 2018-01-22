@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pshcode.mycoinasset.model.MyCoin;
-import com.github.pshcode.mycoinasset.service.DailyMyCoinRecordService;
+import com.github.pshcode.mycoinasset.service.MyCoinDailySumPriceService;
 import com.github.pshcode.mycoinasset.service.MyCoinService;
 
 /**
@@ -26,7 +26,7 @@ public class MyCoinController {
 	private MyCoinService myAssetService;
 
 	@Autowired
-	private DailyMyCoinRecordService myCoinRecordService;
+	private MyCoinDailySumPriceService myCoinRecordService;
 
 	@GetMapping
 	public String main(Model model) throws IOException {
@@ -51,5 +51,10 @@ public class MyCoinController {
 	@ResponseBody
 	public void delete(@PathVariable("id") String id) {
 		myAssetService.deleteMyCoin(id);
+	}
+	
+	@GetMapping("/test")
+	public void test() {
+		myCoinRecordService.myCoinDailySumPrice();
 	}
 }

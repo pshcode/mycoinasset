@@ -3,6 +3,7 @@ package com.github.pshcode.mycoinasset.api;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,10 +21,11 @@ public class CoinMarketCapApiService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	private final static String COIN_INFO_URL = "https://api.coinmarketcap.com/v1/ticker/%s/?convert=KRW";
+	@Value("#{commonProps['coinmarketcap.url']}")
+	private String coinMarketCapUrl;
 
 	public CoinInfo getCurrentCoinInfo(String id) throws IOException {
-		String coinUrl = String.format(COIN_INFO_URL, id);
+		String coinUrl = String.format(coinMarketCapUrl, id);
 		String json = restTemplate.getForObject(coinUrl, String.class);
 
 		CoinInfo[] coinInfos = objectMapper.readValue(json, CoinInfo[].class);

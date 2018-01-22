@@ -13,7 +13,7 @@ import com.github.pshcode.mycoinasset.model.MyCoinHistory;
  * @author SungHoon, Park
  */
 @Service
-public class DailyMyCoinRecordService {
+public class MyCoinDailySumPriceService {
 	@Autowired
 	private MyCoinHistoryService myCoinHistoryService;
 
@@ -21,7 +21,7 @@ public class DailyMyCoinRecordService {
 	private LineNotifyApiService lineNotifyApiService;
 
 	@Transactional
-	public void dailyMyCoinRecord() {
+	public void myCoinDailySumPrice() {
 		List<MyCoinHistory> myCoinHistories = myCoinHistoryService.addTodayMyCoinHistories();
 		lineNotifyApiService.notifyMessage(myCoinHistories);
 	}
