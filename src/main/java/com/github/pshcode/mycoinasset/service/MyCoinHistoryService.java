@@ -1,16 +1,16 @@
 package com.github.pshcode.mycoinasset.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pshcode.mycoinasset.api.CoinMarketCapApiService;
 import com.github.pshcode.mycoinasset.mapper.MyCoinHistoryMapper;
-import com.github.pshcode.mycoinasset.model.CoinInfo;
 import com.github.pshcode.mycoinasset.model.MyCoin;
 import com.github.pshcode.mycoinasset.model.MyCoinHistory;
 import lombok.extern.slf4j.Slf4j;
@@ -30,43 +30,32 @@ public class MyCoinHistoryService {
 	@Autowired
 	private CoinMarketCapApiService coinMarketCapApiService;
 
-	public List<MyCoinHistory> getMyCoinHistories(String createDate) {
-		return myCoinHistoryMapper.selectMyCoinHistories(createDate);
+	public List<MyCoinHistory> getMyCoinHistoryList() {
+		String today = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
+
+		return myCoinHistoryMapper.selectMyCoinHistoryList(today);
 	}
 
 	@Transactional
-	public List<MyCoinHistory> addTodayMyCoinHistories() {
-		List<MyCoin> myCoins = myCoinService.getMyCoins();
-		List<MyCoinHistory> myCoinHistories = new ArrayList<>();
+	public void addAllMyCoinHistory() {
+		List<MyCoin> myCoinList = myCoinService.getMyCoinList();
+		int seq = myCoinHistoryMapper.selectNowHistorySeq();
 
-		for (MyCoin myCoin : myCoins) {
+		for (MyCoin myCoin : myCoinList) {
+			String priceKrw = "";
+
 			try {
-				CoinInfo coinInfo = coinMarketCapApiService.getCurrentCoinInfo(myCoin.getId());
-
-				if (coinInfo != null) {
-					MyCoinHistory myCoinHistory = makeMyCoinHistory(myCoin, coinInfo);
-					myCoinHistoryMapper.insertMyCoinHistory(myCoinHistory);
-					myCoinHistories.add(myCoinHistory);
-				}
+				priceKrw = coinMarketCapApiService.getCurrentCoinPriceKrw(myCoin.getId());
 			} catch (Exception e) {
-				log.error("coinMarketCap Api failed. coin=" + myCoin, e);
+				log.error("coinMarKetCapApi failed. myCoin=" + myCoin, e);
+			}
+
+			if (StringUtils.isNotEmpty(priceKrw)) {
+				MyCoinHistory myCoinHistory = new MyCoinHistory(myCoin, priceKrw);
+				myCoinHistory.setSeq(seq);
+
+				myCoinHistoryMapper.insertMyCoinHistory(myCoinHistory);
 			}
 		}
-
-		return myCoinHistories;
-	}
-
-	private MyCoinHistory makeMyCoinHistory(MyCoin myCoin, CoinInfo coinInfo) {
-		BigDecimal amount = new BigDecimal(myCoin.getAmount());
-		BigDecimal price = new BigDecimal(coinInfo.getPriceKrw());
-		BigDecimal sumPrice = amount.multiply(price);
-
-		MyCoinHistory myCoinHistory = new MyCoinHistory();
-		myCoinHistory.setId(myCoin.getId());
-		myCoinHistory.setAmount(myCoin.getAmount());
-		myCoinHistory.setPrice(price.toString());
-		myCoinHistory.setSumPrice(sumPrice.toString());
-
-		return myCoinHistory;
 	}
 }

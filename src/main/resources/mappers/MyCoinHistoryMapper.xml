@@ -3,20 +3,44 @@
 
 <mapper namespace="com.github.pshcode.mycoinasset.mapper.MyCoinHistoryMapper">
 
-	<select id="selectMyCoinHistories" parameterType="string" resultType="myCoinHistory">
-		select date_format(create_date, '%Y-%m-%d') AS createDate
-			 , id
-		 	 , amount
-		 	 , price
-		 	 , sum_price AS sumPrice
-		  from my_coin
-		 where use_yn = 'Y'
+	<select id="selectMyCoinHistoryList" parameterType="string" resultType="myCoinHistory">
+		select date_format(x.create_ymd, '%Y-%m-%d') AS createYmd
+			 , x.seq
+			 , x.id
+			 , x.amount
+			 , x.price
+			 , x.total_price AS totalPrice
+			 , y.coin_name AS coinName
+			 , y.remark
+		  from my_coin_hist x, my_coin y
+		 where x.id = y.id
+		   and x.create_ymd = str_to_date(#{searchYmd}, '%Y-%m-%d')
+		   and x.seq = (select max(seq) from my_coin_hist where create_ymd = str_to_date(#{searchYmd}, '%Y-%m-%d'))
+	</select>
+
+	<select id="selectNowHistorySeq" resultType="int">
+		select ifnull(max(x.seq) + 1, 1)
+		  from my_coin_hist x
+		 where x.create_ymd = str_to_date(now(), '%Y-%m-%d')
 	</select>
 
 	<insert id="insertMyCoinHistory" parameterType="myCoinHistory">
-		insert into my_coin_history (create_date, id, amount, price, sum_price)
-		values (now(), #{id}, #{amount}, #{price}, #{sumPrice})
-		on duplicate key update amount = #{amount}, price = #{price}, sum_price = #{sumPrice}
+		insert into my_coin_hist
+		( create_ymd
+		, seq
+		, id
+		, amount
+		, price
+		, total_price
+		)
+		values
+		( now()
+		, #{seq}
+		, #{id}
+		, #{amount}
+		, #{price}
+		, #{totalPrice}
+		)
 	</insert>
 
 </mapper>

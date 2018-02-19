@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -15,17 +16,19 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.github.pshcode.mycoinasset.model.MyCoinHistory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author SungHoon, Park
  */
 @Service
+@Slf4j
 public class LineNotifyApiService {
 	@Autowired
 	private RestTemplate restTemplate;
 
 	@Autowired
-	private NumberFormat krwNumberFormat;
+	private NumberFormat priceNumberFormat;
 
 	@Value("#{commonProps['line.notify.url']}")
 	private String lineNotifyUrl;
@@ -33,7 +36,7 @@ public class LineNotifyApiService {
 	@Value("#{commonProps['line.notify.token']}")
 	private String lineNotifyToken;
 
-	public boolean notifyMessage(List<MyCoinHistory> myCoinHistories) {
+	public void notifyMessage(List<MyCoinHistory> myCoinHistories) {
 		MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
 		multiValueMap.add("message", makeMessage(myCoinHistories));
 
@@ -43,27 +46,31 @@ public class LineNotifyApiService {
 		HttpEntity<Object> httpEntity = new HttpEntity<>(multiValueMap, headers);
 		ResponseEntity<String> responseEntity = restTemplate.exchange(lineNotifyUrl, HttpMethod.POST, httpEntity, String.class);
 
-		return false;
+		if (responseEntity.getStatusCode() != HttpStatus.OK) {
+			log.error("lineNotify failed.");
+		}
 	}
 
-	private String makeMessage(List<MyCoinHistory> myCoinHistories) {
-		StringBuilder messageBUilder = new StringBuilder();
+	private String makeMessage(List<MyCoinHistory> myCoinHistoryList) {
+		StringBuilder messageBuilder = new StringBuilder();
 
-		for (MyCoinHistory myCoinHistory : myCoinHistories) {
+		for (MyCoinHistory myCoinHistory : myCoinHistoryList) {
 			double price = Double.parseDouble(myCoinHistory.getPrice());
-			double sumPrice = Double.parseDouble(myCoinHistory.getSumPrice());
+			double totalPrice = Double.parseDouble(myCoinHistory.getTotalPrice());
 
-			messageBUilder.append("\n");
-			messageBUilder.append("[").append(myCoinHistory.getId()).append("]");
-			messageBUilder.append("\n");
-			messageBUilder.append("수량: ").append(myCoinHistory.getAmount());
-			messageBUilder.append("\n");
-			messageBUilder.append("가격: ").append(krwNumberFormat.format(price)).append("원");
-			messageBUilder.append("\n");
-			messageBUilder.append("합계: ").append(krwNumberFormat.format(sumPrice)).append("원");
-			messageBUilder.append("\n");
+			messageBuilder.append("\n");
+			messageBuilder.append("[").append(myCoinHistory.getId()).append("]");
+			messageBuilder.append("\n");
+			messageBuilder.append("설명: ").append(myCoinHistory.getRemark());
+			messageBuilder.append("\n");
+			messageBuilder.append("수량: ").append(myCoinHistory.getAmount());
+			messageBuilder.append("\n");
+			messageBuilder.append("가격: ").append(priceNumberFormat.format(price)).append("원");
+			messageBuilder.append("\n");
+			messageBuilder.append("합계: ").append(priceNumberFormat.format(totalPrice)).append("원");
+			messageBuilder.append("\n");
 		}
 
-		return messageBUilder.toString();
+		return messageBuilder.toString();
 	}
 }

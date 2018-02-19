@@ -17,7 +17,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -45,6 +47,11 @@ public class MyCoinAssetApplication extends WebMvcConfigurerAdapter {
 	}
 
 	@Bean
+	public TaskScheduler taskScheduler() {
+		return new ConcurrentTaskScheduler();
+	}
+
+	@Bean
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
@@ -55,7 +62,7 @@ public class MyCoinAssetApplication extends WebMvcConfigurerAdapter {
 	}
 
 	@Bean
-	public NumberFormat krwNumberFormat() {
+	public NumberFormat priceNumberFormat() {
 		NumberFormat numberFormat = NumberFormat.getInstance();
 		numberFormat.setMaximumFractionDigits(0);
 

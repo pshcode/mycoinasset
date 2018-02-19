@@ -3,34 +3,14 @@
 
 <mapper namespace="com.github.pshcode.mycoinasset.mapper.MyCoinMapper">
 
-	<select id="selectMyCoins" resultType="myCoin">
+	<select id="selectMyCoinList" resultType="myCoin">
 		select id
-			 , symbol
+			 , coin_name AS coinName
 		 	 , amount
 		 	 , remark
-		 	 , date_format(create_date, '%Y-%m-%d %H:%i:%s') AS createDate
+		 	 , date_format(create_ymdt, '%Y-%m-%d %H:%i:%s') AS createYmdt
 		  from my_coin
 		 where use_yn = 'Y'
 	</select>
-
-	<insert id="insertMyCoin" parameterType="myCoin">
-		insert into my_coin (id, symbol, amount, use_yn, remark, create_date)
-		values (#{id}, #{symbol}, #{amount}, 'Y', #{remark}, now())
-	</insert>
-
-	<update id="updateMyCoin" parameterType="myCoin">
-		update my_coin
-		   set id = #{id}
-		     , symbol = #{symbol}
-		     , amount = #{amount}
-		     , remark = #{remark}
-		 where id = #{id}
-	</update>
-
-	<delete id="deletMyCoin" parameterType="string">
-		update my_coin
-		   set use_yn = 'N'
-		 where symbol = #{id}
-	</delete>
 
 </mapper>

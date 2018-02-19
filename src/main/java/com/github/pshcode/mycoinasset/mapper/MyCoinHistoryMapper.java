@@ -13,7 +13,9 @@ import com.github.pshcode.mycoinasset.model.MyCoinHistory;
 @Repository
 @Mapper
 public interface MyCoinHistoryMapper {
-	List<MyCoinHistory> selectMyCoinHistories(String createDate);
+	List<MyCoinHistory> selectMyCoinHistoryList(String searchYmd);
+
+	int selectNowHistorySeq();
 
 	void insertMyCoinHistory(MyCoinHistory myCoinHistory);
 }

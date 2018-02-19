@@ -13,9 +13,9 @@ import lombok.Setter;
 @Setter
 public class MyCoin {
 	private String id;
-	private String symbol;
+	private String coinName;
 	private String amount;
 	private String useYn;
 	private String remark;
-	private String createDate;
+	private String createYmdt;
 }

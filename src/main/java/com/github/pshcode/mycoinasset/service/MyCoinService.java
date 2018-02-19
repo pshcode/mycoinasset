@@ -17,26 +17,14 @@ public class MyCoinService {
 	@Autowired
 	private MyCoinMapper myCoinMapper;
 
-	public List<MyCoin> getMyCoins() {
-		List<MyCoin> myCoins = myCoinMapper.selectMyCoins();
+	public List<MyCoin> getMyCoinList() {
+		List<MyCoin> myCoinList = myCoinMapper.selectMyCoinList();
 
-		for (MyCoin myCoin : myCoins) {
+		for (MyCoin myCoin : myCoinList) {
 			String amount = StringUtils.stripEnd(myCoin.getAmount(), "0");
 			myCoin.setAmount(amount);
 		}
 
-		return myCoins;
-	}
-
-	public void addMyCoin(MyCoin myCoin) {
-		myCoinMapper.insertMyCoin(myCoin);
-	}
-
-	public int modifyMyCoin(MyCoin myCoin) {
-		return myCoinMapper.updateMyCoin(myCoin);
-	}
-
-	public int deleteMyCoin(String id) {
-		return myCoinMapper.deletMyCoin(id);
+		return myCoinList;
 	}
 }

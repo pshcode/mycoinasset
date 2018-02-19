@@ -13,11 +13,5 @@ import com.github.pshcode.mycoinasset.model.MyCoin;
 @Repository
 @Mapper
 public interface MyCoinMapper {
-	List<MyCoin> selectMyCoins();
-
-	void insertMyCoin(MyCoin myCoin);
-
-	int updateMyCoin(MyCoin myCoin);
-
-	int deletMyCoin(String symbol);
+	List<MyCoin> selectMyCoinList();
 }
