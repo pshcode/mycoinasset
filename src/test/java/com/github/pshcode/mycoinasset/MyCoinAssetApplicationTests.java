@@ -6,6 +6,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.github.pshcode.mycoinasset.config.MyCoinAssetApplication;
 import com.github.pshcode.mycoinasset.mapper.MyCoinMapper;
 
+@Ignore
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MyCoinAssetApplication.class)
 public class MyCoinAssetApplicationTests {

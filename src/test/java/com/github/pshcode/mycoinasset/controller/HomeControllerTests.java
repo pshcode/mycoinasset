@@ -2,6 +2,7 @@ package com.github.pshcode.mycoinasset.controller;
 
 import java.net.URI;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pshcode.mycoinasset.config.MyCoinAssetApplication;
 import com.github.pshcode.mycoinasset.model.CoinMarketCapApiResult;
 
+@Ignore
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MyCoinAssetApplication.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class HomeControllerTests {
