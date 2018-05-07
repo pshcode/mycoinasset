@@ -20,6 +20,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
+import org.springframework.jmx.export.annotation.AnnotationMBeanExporter;
+import org.springframework.jmx.support.RegistrationPolicy;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
@@ -40,7 +42,16 @@ public class MyCoinAssetApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		SpringApplication.run(MyCoinAssetApplication.class, args);
 	}
-
+	
+	@Bean
+	public AnnotationMBeanExporter annotationMBeanExporter() {
+		AnnotationMBeanExporter annotationMBeanExporter = new AnnotationMBeanExporter();
+		annotationMBeanExporter.addExcludedBean("dataSource");
+		annotationMBeanExporter.setRegistrationPolicy(RegistrationPolicy.IGNORE_EXISTING);
+		
+		return annotationMBeanExporter;
+	}
+	
 	@Bean
 	public DataSource dataSource() {
 		JndiDataSourceLookup lookup = new JndiDataSourceLookup();
